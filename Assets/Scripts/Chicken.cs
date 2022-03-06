@@ -8,13 +8,11 @@ public class Chicken : MonoBehaviour
     [SerializeField] private Animator _anim;
     [SerializeField] private Camera _cam;
     [SerializeField] private Transform _camTransform;
-    [SerializeField] private Transform _followTarget;
+    [SerializeField] private GameController gameController;
 
     private Vector3 respawnPosition;
     private Quaternion respawnRotation;
 
-    private bool _flipped;
-    private bool _canFlip = true;
     private bool _isMoving;
     private float _turnSmoothVelocity;
     private Vector3 _direction;
@@ -45,56 +43,23 @@ public class Chicken : MonoBehaviour
         else
              _anim.Play("Idle");
 
-        if(Input.GetKey("r") && _canFlip)
-            FlipGravity();
+        if(Input.GetKey("space"))
+            gameController.FlipGravity();
     }
 
-    private void FlipGravity() {
-        StartCoroutine(FlipCoroutine());
 
-        if(_flipped) {
-            Physics.gravity = new Vector3(0, -9.81f, 0);
-            StartCoroutine(FlipDelay());     
-            _flipped = false;
-        }
-        else {
-            Physics.gravity = new Vector3(0, 9.81f, 0);
-             StartCoroutine(FlipBackDelay());
-            _flipped = true;
-        }
-    }
-
-     private IEnumerator FlipDelay() {
-        yield return new WaitForSeconds(0.3f);
-        _followTarget.Rotate(0, 0, 180); 
-     }
-
-      private IEnumerator FlipBackDelay() {
-        yield return new WaitForSeconds(0.3f);
-        _followTarget.Rotate(0, 0, -180); 
-     }
-        
-    private IEnumerator FlipCoroutine() {
-        _canFlip = false;
-        _anim.enabled = false;
-        yield return new WaitForSeconds(.75f);
-        _canFlip = true;
-        _anim.enabled = true;
-    }
-    
     private void OnTriggerEnter(Collider other) {
         if(other.CompareTag("Obstacle")) {
-            Physics.gravity = new Vector3(0, -9.81f, 0);
-            if(_flipped) {
-                _followTarget.Rotate(0, 0, -180);
-                _flipped = false;
-            }
+            gameController.ChickenHit();
 
             transform.rotation = respawnRotation;
             transform.position = respawnPosition;
         }
-        // if(other.CompareTag("Egg"))
-            // Increment Limit
+
+        if(other.CompareTag("Egg")) {
+           other.gameObject.SetActive(false);
+           gameController.IncreaseEggsCaught();
+        }
         
     }
 }
