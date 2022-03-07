@@ -12,7 +12,7 @@ public class Timer : MonoBehaviour
     
     // Start is called before the first frame update
     void Start() {
-       _startDuration = 60;
+       _startDuration = 75;
        StartCoroutine(StartDelay(0));  
     }
 

@@ -66,12 +66,13 @@ public class GameController : MonoBehaviour
         _audioSource.PlayOneShot(_collect);
         _eggCountText.text = _eggsCaught + "";
 
-        if(_eggsCaught>=10) 
+        if(_eggsCaught>=12) 
             Win();
     }
 
     private void Win() {
-        print("You Got all 10");
+        Respawn();
+        SceneManager.LoadScene("WinScene");
         // _winCanvas.SetActive(true);
     }
 
@@ -83,6 +84,7 @@ public class GameController : MonoBehaviour
 
     public void Restart() {
         Time.timeScale = 1f;
+        Respawn();  
         SceneManager.LoadScene("GameScene");
     }
 
