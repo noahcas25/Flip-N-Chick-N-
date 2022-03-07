@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameController : MonoBehaviour
@@ -9,9 +10,13 @@ public class GameController : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _chickenScream;
     [SerializeField] private AudioClip _collect;
-    [SerializeField] private TextMeshProUGUI _eggCountText;
-    [SerializeField] private GameObject _UIRed, _UIGreen;
     [SerializeField] private Transform _chickenAnimator;
+
+    // UI
+    [SerializeField] private GameObject _UIRed, _UIGreen;
+    [SerializeField] private GameObject _gameOverCanvas;
+    [SerializeField] private TextMeshProUGUI _eggCountText;
+    [SerializeField] private TextMeshProUGUI _eggCountEnd;
 
     private int _eggsCaught;
     private bool _flipped;
@@ -33,7 +38,7 @@ public class GameController : MonoBehaviour
         }
         else {
             Physics.gravity = new Vector3(0, 9.81f, 0);
-             StartCoroutine(FlipBackDelay());
+            StartCoroutine(FlipBackDelay());
             _flipped = true;
             _UIGreen.SetActive(true);
             _UIRed.SetActive(false);
@@ -67,11 +72,21 @@ public class GameController : MonoBehaviour
 
     private void Win() {
         print("You Got all 10");
+        // _winCanvas.SetActive(true);
     }
 
     public void GameOver() {
-        print("TimesUpButterCup");
+        _gameOverCanvas.SetActive(true);
+        _eggCountEnd.text = _eggsCaught + "";
+        Time.timeScale = 0f;
     }
+
+    public void Restart() {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void Quit() => Application.Quit();
 
      private IEnumerator FlipDelay() {
         yield return new WaitForSeconds(0.3f);
