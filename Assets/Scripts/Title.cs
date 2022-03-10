@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Title : MonoBehaviour
@@ -8,5 +9,12 @@ public class Title : MonoBehaviour
     void Start()
     {
       Physics.gravity = new Vector3(0, 9.81f, 0);  
+    }
+
+    private void Update() {
+      if(Input.GetMouseButtonDown(0)) { 
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Confined;
+      }
     }
 }
